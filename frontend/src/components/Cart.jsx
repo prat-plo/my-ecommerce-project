@@ -17,7 +17,7 @@ function Cart({ cartItems = [], totalCartPrice = 0, onIncreaseItem, onDecreaseIt
             >
               <div>
                 <h3 className="font-semibold text-lg">{item.title}</h3>
-                <p className="text-slate-400 text-sm">ราคา: {item.price} ฿</p>
+                <p className="text-slate-400 text-sm">ราคา: {(item.price).toLocaleString()} ฿</p>
               </div>
 
               <div className="flex items-center gap-4">
@@ -42,7 +42,7 @@ function Cart({ cartItems = [], totalCartPrice = 0, onIncreaseItem, onDecreaseIt
 
                 {/* ราคารวมของสินค้าชิ้นนี้ */}
                 <span className="font-semibold text-emerald-400 text-lg min-w-[100px] text-right">
-                  {item.price * item.quantity} ฿
+                  {(item.price * item.quantity).toLocaleString()} ฿
                 </span>
 
                 {/* ปุ่มลบรายการ */}

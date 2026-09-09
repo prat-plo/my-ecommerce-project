@@ -16,7 +16,7 @@ function ProductCard({ title, price, category, description, onAddToCart }) {
       
       <div className="flex items-center justify-between mt-4">
         {/* ใช้ตัวแปร price */}
-        <span className="text-2xl font-bold text-emerald-400">{price} ฿</span>
+        <span className="text-2xl font-bold text-emerald-400">{price.toLocaleString()} ฿</span>
         <button 
           onClick={onAddToCart} 
           className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-lg transition active:scale-95">
