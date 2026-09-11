@@ -18,7 +18,7 @@ function Admin({ onProductAdded }) {
       }
 
       const response = await axios.post(
-        'http://localhost:5000/api/products',
+        'https://my-ecommerce-api-iowl.onrender.com/api/products',
         { title, price: Number(price), category, description },
         config
       )
