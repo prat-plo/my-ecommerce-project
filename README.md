@@ -52,8 +52,9 @@ A modern, responsive full-stack e-commerce web application built using the MERN 
         ├── components/ # Modular UI components (Navbar, Cart, ProductCard, Admin, Login)
         ├── App.jsx     # Main React application entry & state
         └── main.jsx    # React DOM rendering
+```
 
-🚀 Getting Started Locally
+## 🚀 Getting Started Locally
 Prerequisites
   - Node.js (v18 or higher)
   - MongoDB Atlas Account or Local MongoDB instance
