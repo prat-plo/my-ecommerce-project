@@ -1,9 +1,13 @@
-function ProductCard({ title, price, category, description, onAddToCart }) {
+function ProductCard({ title, price, category, description, image, onAddToCart }) {
   return (
     <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-lg text-white w-80 flex flex-col justify-between">
       <div>
         <div className="bg-slate-700 h-40 rounded-lg mb-4 flex items-center justify-center text-slate-400 font-medium text-sm">
-          [ Image Placeholder ]
+          {image ? ( <img src={image} alt={title} className="w-full h-full object-cover"/> ) : (
+            <span className="text-slate-400 font-medium text-sm">
+              ไม่มีรูปสินค้า
+            </span>
+          )}
         </div>
         
         <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-medium">
