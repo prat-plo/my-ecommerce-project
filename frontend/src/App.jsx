@@ -12,14 +12,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
 
-  // ดึงข้อมูลสินค้า และ ตรวจสอบสถานะ Login จาก localStorage
-  useEffect(() => {
-    const storedUser = localStorage.getItem('userInfo')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    }
-
-    const fetchProducts = async () => {
+  const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/products')
         setProducts(response.data)
@@ -28,6 +21,13 @@ function App() {
         console.error('Error fetching products:', error)
         setLoading(false)
       }
+    }
+
+  // ดึงข้อมูลสินค้า และ ตรวจสอบสถานะ Login จาก localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('userInfo')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
     }
 
     fetchProducts()
@@ -93,6 +93,11 @@ function App() {
 
       {/* ฟอร์ม Login (แสดงเมื่อยังไม่ได้เข้าสู่ระบบ) */}
       {!user && <Login onLoginSuccess={(userData) => setUser(userData)} />}
+
+      {/* แผง Admin (แสดงเฉพาะเมื่อล็อกอินแล้ว และเป็น Admin) */}
+      {user && (
+        <Admin onProductAdded={fetchProducts} />
+      )}
 
       {/* ส่วนแสดงสินค้าและตะกร้า */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
