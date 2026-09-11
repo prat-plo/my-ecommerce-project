@@ -10,17 +10,13 @@ function Admin({ onProductAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      // ดึง Token จาก localStorage เพื่อยืนยันสิทธิ์
       const storedUser = localStorage.getItem('userInfo')
       const token = storedUser ? JSON.parse(storedUser).token : ''
 
       const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       }
 
-      // ยิง API เพิ่มสินค้าเข้าฐานข้อมูล
       const response = await axios.post(
         'http://localhost:5000/api/products',
         { title, price: Number(price), category, description },
@@ -29,11 +25,9 @@ function Admin({ onProductAdded }) {
 
       if (response.status === 201) {
         alert('เพิ่มสินค้าใหม่สำเร็จ!')
-        // รีเซ็ตฟอร์ม
         setTitle('')
         setPrice('')
         setDescription('')
-        // สั่งให้หน้าหลักดึงข้อมูลสินค้าใหม่
         if (onProductAdded) onProductAdded()
       }
     } catch (error) {
@@ -42,28 +36,33 @@ function Admin({ onProductAdded }) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto my-8 p-6 border rounded shadow bg-gray-100 text-black">
-      <h2 className="text-xl font-bold mb-4 text-blue-600">
+    <div className="max-w-4xl mx-auto bg-slate-800 border border-slate-700 rounded-xl p-6 text-white shadow-xl my-8">
+      <h2 className="text-2xl font-bold mb-6 text-emerald-400 flex items-center gap-2">
         ⚙️ แผงควบคุมผู้ดูแลระบบ (Admin Panel)
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+
+      <form onSubmit={handleSubmit} className="space-y-4 bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+        <h3 className="text-lg font-semibold text-slate-200 mb-2">เพิ่มสินค้าใหม่เข้าคลัง</h3>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium">ชื่อสินค้า</label>
-            <input
-              type="text"
+            <label className="block text-xs text-slate-400 mb-1">ชื่อสินค้า</label>
+            <input 
+              type="text" 
               required
-              className="w-full border p-2 rounded mt-1 bg-white"
+              placeholder="เช่น เสื้อเชิ้ตแขนยาว" 
+              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">ราคา (บาท)</label>
-            <input
-              type="number"
+            <label className="block text-xs text-slate-400 mb-1">ราคา (บาท)</label>
+            <input 
+              type="number" 
               required
-              className="w-full border p-2 rounded mt-1 bg-white"
+              placeholder="เช่น 590" 
+              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
@@ -71,9 +70,9 @@ function Admin({ onProductAdded }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">หมวดหมู่</label>
-          <select
-            className="w-full border p-2 rounded mt-1 bg-white"
+          <label className="block text-xs text-slate-400 mb-1">หมวดหมู่</label>
+          <select 
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-slate-300"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -84,18 +83,18 @@ function Admin({ onProductAdded }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">รายละเอียดสินค้า</label>
+          <label className="block text-xs text-slate-400 mb-1">รายละเอียดสินค้า</label>
           <textarea
-            className="w-full border p-2 rounded mt-1 bg-white"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white"
             rows="3"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700 cursor-pointer"
+        <button 
+          type="submit" 
+          className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2.5 rounded-lg transition cursor-pointer"
         >
           + บันทึกสินค้าเข้าระบบ
         </button>
