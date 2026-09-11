@@ -6,14 +6,16 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import User from './models/User.js'
 import { protect, admin } from './middleware/authMiddleware.js'
+import cors from 'cors'
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000
 
-// Middleware สำหรับอ่าน JSON Body จาก Request
+// Middleware
 app.use(express.json())
+app.use(cors())
 
 // เชื่อมต่อ MongoDB Atlas
 mongoose
