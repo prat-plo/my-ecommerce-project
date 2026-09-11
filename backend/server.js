@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken'
 import User from './models/User.js'
 import { protect, admin } from './middleware/authMiddleware.js'
 import cors from 'cors'
+import orderRoutes from './routes/orderRoutes.js'
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 5000
 // Middleware
 app.use(express.json())
 app.use(cors())
+app.use('/api/orders', orderRoutes)
 
 // เชื่อมต่อ MongoDB Atlas
 mongoose
