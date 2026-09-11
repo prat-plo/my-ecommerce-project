@@ -118,6 +118,7 @@ function App() {
               price={item.price}
               category={item.category}
               description={item.description}
+              image={item.image}
               onAddToCart={() => handleAddToCart(item)}
             />
           ))}

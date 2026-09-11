@@ -6,6 +6,7 @@ function Admin({ onProductAdded }) {
   const [price, setPrice] = useState('')
   const [category, setCategory] = useState('Clothing')
   const [description, setDescription] = useState('')
+  const [image, setImage] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -19,7 +20,8 @@ function Admin({ onProductAdded }) {
 
       const response = await axios.post(
         'https://my-ecommerce-api-iowl.onrender.com/api/products',
-        { title, price: Number(price), category, description },
+        { title, price: Number(price), category, description, image },
+        
         config
       )
 
@@ -90,6 +92,20 @@ function Admin({ onProductAdded }) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
+        </div>
+
+        <div>
+          <label className="block text-xs text-slate-400 mb-1">
+           URL รูปสินค้า
+          </label>
+
+          <input
+            type="url"
+            placeholder="https://..."
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+          />
         </div>
 
         <button 

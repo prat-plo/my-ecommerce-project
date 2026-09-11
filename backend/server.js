@@ -41,8 +41,8 @@ app.get('/api/products', async (req, res) => {
 // 2. CREATE: เพิ่มสินค้าใหม่ลงฐานข้อมูล
 app.post('/api/products', protect, admin, async (req, res) => {
   try {
-    const { title, price, category, description } = req.body
-    const newProduct = new Product({ title, price, category, description })
+    const { title, price, category, description, image } = req.body
+    const newProduct = new Product({ title, price, category, description, image })
     const savedProduct = await newProduct.save()
     res.status(201).json(savedProduct)
   } catch (error) {
