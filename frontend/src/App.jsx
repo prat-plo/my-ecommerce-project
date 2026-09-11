@@ -14,7 +14,7 @@ function App() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/products')
+      const response = await axios.get('https://my-ecommerce-api-iowl.onrender.com/api/products')
       setProducts(response.data)
       setLoading(false)
     } catch (error) {
@@ -80,7 +80,7 @@ function App() {
         totalPrice: totalCartPrice
       }
 
-      const response = await axios.post('http://localhost:5000/api/orders', orderData)
+      const response = await axios.post('https://my-ecommerce-api-iowl.onrender.com/api/orders', orderData)
 
       if (response.status === 201) {
         alert('สั่งซื้อสำเร็จ! บันทึกออเดอร์ลงระบบเรียบร้อย')
