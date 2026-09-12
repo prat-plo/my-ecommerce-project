@@ -79,7 +79,7 @@ app.delete('/api/products/:id', protect, admin, async (req, res) => {
 // 1. REGISTER: สมัครสมาชิก
 app.post('/api/auth/register', async (req, res) => {
   try {
-    const { name, email, password, isAdmin } = req.body
+    const { name, email, password } = req.body
 
     // เช็คว่ามี email นี้ในระบบหรือยัง
     const userExists = await User.findOne({ email })
@@ -96,7 +96,7 @@ app.post('/api/auth/register', async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      isAdmin: isAdmin || false
+      isAdmin: false
     })
 
     res.status(201).json({
