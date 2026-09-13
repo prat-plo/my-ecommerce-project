@@ -8,6 +8,8 @@ import User from './models/User.js'
 import { protect, admin } from './middleware/authMiddleware.js'
 import cors from 'cors'
 import orderRoutes from './routes/orderRoutes.js'
+import cloudinary from './config/cloudinary.js'
+import upload from './middleware/uploadMiddleware.js'
 
 dotenv.config()
 
@@ -190,6 +192,43 @@ app.put('/api/auth/profile', protect, async (req, res) => {
     })
   }
 })
+
+// --- IMAGE UPLOAD ROUTE ---
+app.post('/api/upload', protect, admin, upload.single('image'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          message: 'Please select an image'
+        })
+      }
+
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'my-ecommerce-project/products',
+          resource_type: 'image'
+        }, (error, result) => {
+          if (error) {
+            console.error('Cloudinary upload error:', error)
+            return res.status(500).json({
+              message: 'Image upload failed'
+            })
+          } res.json({
+            message: 'Image uploaded successfully',
+            imageUrl: result.secure_url
+          })
+        }
+      )
+
+      uploadStream.end(req.file.buffer)
+
+    } catch (error) {
+      console.error('Upload error:', error)
+      res.status(500).json({
+        message: error.message
+      })
+    }
+  }
+)
 
 // เปิด Server ให้รอ Request ที่ PORT 5000
 app.listen(PORT, () => {
