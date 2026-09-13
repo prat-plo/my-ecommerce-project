@@ -5,12 +5,14 @@ import ProductCard from './components/ProductCard'
 import Cart from './components/Cart'
 import Admin from './components/Admin'
 import Login from './components/Login'
+import Profile from './components/Profile'
 
 function App() {
   const [products, setProducts] = useState([])
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
+  const handleProfileUpdated = (updatedUser) => {setUser(updatedUser)}
 
   const fetchProducts = async () => {
     try {
@@ -105,6 +107,7 @@ function App() {
         <Navbar cartCount={totalCartCount} user={user} onLogout={handleLogout} />
 
         {!user && <Login onLoginSuccess={(userData) => setUser(userData)} />}
+        {user && (<Profile user={user} onProfileUpdated={handleProfileUpdated} />)}
 
         <h1 className="text-3xl font-bold mb-8 text-center text-slate-100">
           รายการสินค้าทั้งหมด 🛒
