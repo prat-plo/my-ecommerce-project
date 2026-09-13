@@ -146,6 +146,51 @@ app.post('/api/auth/login', async (req, res) => {
   }
 })
 
+// 3. GET PROFILE
+app.get('/api/auth/profile', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password')
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found'
+      })
+    }
+    res.json(user)
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    })
+  }
+})
+
+// 4. UPDATE PROFILE
+app.put('/api/auth/profile', protect, async (req, res) => {
+  try {
+    const { name, email } = req.body
+    const user = await User.findById(req.user._id)
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found'
+      })
+    }
+
+    user.name = name
+    user.email = email
+    const updatedUser = await user.save()
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    })
+  }
+})
+
 // เปิด Server ให้รอ Request ที่ PORT 5000
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`)
