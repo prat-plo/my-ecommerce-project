@@ -39,16 +39,26 @@ function App() {
 
   const handleAddToCart = (product) => {
     const id = product._id || product.id
-    const existing = cartItems.find((item) => (item._id || item.id) === id)
+    const existing = cartItems.find(
+      (item) => (item._id || item.id) === id
+    )
 
-    if (existing) {
-      setCartItems(
-        cartItems.map((item) =>
-          (item._id || item.id) === id ? { ...item, quantity: item.quantity + 1 } : item
+    const currentQuantity = existing ? existing.quantity : 0
+
+    if (currentQuantity >= product.stock) {
+      alert('สินค้าในสต็อกไม่เพียงพอ')
+      return
+    }
+
+   if (existing) {
+     setCartItems(
+       cartItems.map((item) =>
+          (item._id || item.id) === id
+            ? {...item, quantity: item.quantity + 1} : item
         )
       )
     } else {
-      setCartItems([...cartItems, { ...product, id, quantity: 1 }])
+      setCartItems([...cartItems, {...product, id, quantity: 1}])
     }
   }
 
@@ -75,6 +85,7 @@ function App() {
     try {
       const orderData = {
         orderItems: cartItems.map((item) => ({
+          product: item._id || item.id,
           title: item.title,
           price: item.price,
           qty: item.quantity
@@ -122,6 +133,7 @@ function App() {
               category={item.category}
               description={item.description}
               image={item.image}
+              stock={item.stock}
               onAddToCart={() => handleAddToCart(item)}
             />
           ))}
