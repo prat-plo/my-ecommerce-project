@@ -8,6 +8,7 @@ function Admin({ onProductAdded }) {
   const [description, setDescription] = useState('')
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState('')
+  const [stock, setStock] = useState(0)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -38,7 +39,14 @@ function Admin({ onProductAdded }) {
       // 2. Create product
       const response = await axios.post(
         'https://my-ecommerce-api-iowl.onrender.com/api/products',
-        { title, price: Number(price), category, description, image: imageUrl },
+        {
+          title,
+          price: Number(price),
+          category,
+          description,
+          image: imageUrl,
+          stock
+        },
         
         config
       )
@@ -48,6 +56,7 @@ function Admin({ onProductAdded }) {
         setTitle('')
         setPrice('')
         setDescription('')
+        setStock(0)
         if (onProductAdded) onProductAdded()
       }
     } catch (error) {
@@ -64,7 +73,7 @@ function Admin({ onProductAdded }) {
       <form onSubmit={handleSubmit} className="space-y-4 bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
         <h3 className="text-lg font-semibold text-slate-200 mb-2">เพิ่มสินค้าใหม่เข้าคลัง</h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-xs text-slate-400 mb-1">ชื่อสินค้า</label>
             <input 
@@ -87,8 +96,23 @@ function Admin({ onProductAdded }) {
               onChange={(e) => setPrice(e.target.value)}
             />
           </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">
+              จำนวนสินค้า
+            </label>
+            
+            <input
+              type="number"
+              min="0"
+              required
+              placeholder="เช่น 20"
+              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white"
+              value={stock}
+              onChange={(e) => setStock(Number(e.target.value))}
+            />
+          </div>
         </div>
-
+      
         <div>
           <label className="block text-xs text-slate-400 mb-1">หมวดหมู่</label>
           <select 
