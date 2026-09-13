@@ -6,7 +6,8 @@ function Admin({ onProductAdded }) {
   const [price, setPrice] = useState('')
   const [category, setCategory] = useState('Clothing')
   const [description, setDescription] = useState('')
-  const [image, setImage] = useState('')
+  const [imageFile, setImageFile] = useState(null)
+  const [imagePreview, setImagePreview] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -18,9 +19,26 @@ function Admin({ onProductAdded }) {
         headers: { Authorization: `Bearer ${token}` }
       }
 
+      let imageUrl = ''
+
+      // 1. Upload image
+      if (imageFile) {
+        const formData = new FormData()
+        formData.append('image', imageFile)
+
+        const uploadResponse = await axios.post(
+          'https://my-ecommerce-api-iowl.onrender.com/api/upload',
+          formData,
+          config
+        )
+
+        imageUrl = uploadResponse.data.imageUrl
+      }
+
+      // 2. Create product
       const response = await axios.post(
         'https://my-ecommerce-api-iowl.onrender.com/api/products',
-        { title, price: Number(price), category, description, image },
+        { title, price: Number(price), category, description, image: imageUrl },
         
         config
       )
@@ -95,17 +113,26 @@ function Admin({ onProductAdded }) {
         </div>
 
         <div>
-          <label className="block text-xs text-slate-400 mb-1">
-           URL รูปสินค้า
-          </label>
+          <label className="block text-xs text-slate-400 mb-1">รูปสินค้า</label>
 
-          <input
-            type="url"
-            placeholder="https://..."
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 text-white"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
+         <input type="file"
+            accept="image/*"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white"
+            onChange={(e) => {
+            const file = e.target.files[0]
+              if (!file) return
+              setImageFile(file)
+              setImagePreview(URL.createObjectURL(file))
+            }}
+         />
+
+          {imagePreview && (
+           <img
+              src={imagePreview}
+              alt="Preview"
+              className="mt-3 w-40 h-40 object-cover rounded-lg"
+            />
+          )}
         </div>
 
         <button 
