@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 
     res.status(201).json(createdOrder)
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    next(error) // ส่ง error ไปยัง error handling middleware
   }
 })
 
