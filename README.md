@@ -18,6 +18,71 @@ A modern, responsive full-stack e-commerce web application built using the MERN 
 
 ---
 
+## 🚧 Development Roadmap
+
+### 🔴 Phase 1 — ทำให้ระบบพื้นฐานถูกต้อง ✅
+
+1. แก้ช่องโหว่ `isAdmin` ✅
+2. Authentication / Authorization ✅
+3. User Profile ✅
+4. Product Image Upload ✅
+5. Product Stock ✅
+6. Validation ✅
+7. Error Handling ✅
+
+↓
+
+### 🟠 Phase 2 — ทำให้ซื้อสินค้าได้จริง
+
+1. Checkout
+2. Shipping Address
+3. Order System ใหม่
+4. Order History
+5. Order Status
+6. Payment Method
+7. Shipping / Tracking
+
+↓
+
+### 🟡 Phase 3 — ทำให้เหมือน E-commerce จริง
+
+1. Search
+2. Filter
+3. Sort
+4. Pagination
+5. Wishlist
+6. Review & Rating
+7. Coupon
+8. Product Variant
+
+↓
+
+### 🟢 Phase 4 — ทำ Admin ให้ Professional
+
+1. Dashboard
+2. Sales Analytics
+3. User Management
+4. Order Management
+5. Inventory Management
+6. Review Management
+7. Coupon Management
+
+↓
+
+### 🔵 Phase 5 — Production
+
+1. Payment Gateway
+2. Email Notification
+3. Forgot Password
+4. Refresh Token
+5. Rate Limit
+6. Security Hardening
+7. Logging
+8. Testing
+9. CI/CD
+
+---
+
 ## 🛠️ Tech Stack & Deployment
 
 ### **Frontend**
