@@ -10,6 +10,12 @@ import cors from 'cors'
 import orderRoutes from './routes/orderRoutes.js'
 import cloudinary from './config/cloudinary.js'
 import upload from './middleware/uploadMiddleware.js'
+import {
+  validateRegister,
+  validateLogin,
+  validateProfile,
+  validateProduct
+} from './middleware/validationMiddleware.js'
 
 dotenv.config()
 
@@ -41,7 +47,7 @@ app.get('/api/products', async (req, res) => {
 })
 
 // 2. CREATE: เพิ่มสินค้าใหม่ลงฐานข้อมูล
-app.post('/api/products', protect, admin, async (req, res) => {
+app.post('/api/products', protect, admin, validateProduct, async (req, res) => {
   try {
     const { 
       title, 
@@ -67,7 +73,7 @@ app.post('/api/products', protect, admin, async (req, res) => {
 })
 
 // 3. UPDATE: แก้ไขข้อมูลสินค้าตาม ID
-app.put('/api/products/:id', protect, admin, async (req, res) => {
+app.put('/api/products/:id', protect, admin, validateProduct, async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
@@ -93,7 +99,7 @@ app.delete('/api/products/:id', protect, admin, async (req, res) => {
 // --- AUTH ROUTES ---
 
 // 1. REGISTER: สมัครสมาชิก
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', validateRegister, async (req, res) => {
   try {
     const { name, email, password } = req.body
 
@@ -127,7 +133,7 @@ app.post('/api/auth/register', async (req, res) => {
 })
 
 // 2. LOGIN: เข้าสู่ระบบและรับ JWT Token
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', validateLogin, async (req, res) => {
   try {
     const { email, password } = req.body
 
@@ -180,7 +186,7 @@ app.get('/api/auth/profile', protect, async (req, res) => {
 })
 
 // 4. UPDATE PROFILE
-app.put('/api/auth/profile', protect, async (req, res) => {
+app.put('/api/auth/profile', protect, validateProfile, async (req, res) => {
   try {
     const { name, email } = req.body
     const user = await User.findById(req.user._id)
