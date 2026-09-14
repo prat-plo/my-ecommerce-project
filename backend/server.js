@@ -16,6 +16,10 @@ import {
   validateProfile,
   validateProduct
 } from './middleware/validationMiddleware.js'
+import {
+  notFound,
+  errorHandler
+} from './middleware/errorMiddleware.js'
 
 dotenv.config()
 
@@ -42,7 +46,7 @@ app.get('/api/products', async (req, res) => {
     const products = await Product.find({})
     res.json(products)
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    next(error) // ส่ง error ไปยัง error handling middleware
   }
 })
 
@@ -68,7 +72,7 @@ app.post('/api/products', protect, admin, validateProduct, async (req, res) => {
     const savedProduct = await newProduct.save()
     res.status(201).json(savedProduct)
   } catch (error) {
-    res.status(400).json({ message: error.message })
+    next(error) // ส่ง error ไปยัง error handling middleware
   }
 })
 
@@ -82,7 +86,7 @@ app.put('/api/products/:id', protect, admin, validateProduct, async (req, res) =
     )
     res.json(updatedProduct)
   } catch (error) {
-    res.status(400).json({ message: error.message })
+    next(error) // ส่ง error ไปยัง error handling middleware
   }
 })
 
@@ -92,7 +96,7 @@ app.delete('/api/products/:id', protect, admin, async (req, res) => {
     await Product.findByIdAndDelete(req.params.id)
     res.json({ message: 'Product deleted successfully' })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    next(error) // ส่ง error ไปยัง error handling middleware
   }
 })
 
@@ -128,7 +132,7 @@ app.post('/api/auth/register', validateRegister, async (req, res) => {
       isAdmin: user.isAdmin
     })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    next(error) // ส่ง error ไปยัง error handling middleware
   }
 })
 
@@ -164,7 +168,7 @@ app.post('/api/auth/login', validateLogin, async (req, res) => {
       token
     })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    next(error) // ส่ง error ไปยัง error handling middleware
   }
 })
 
@@ -179,9 +183,7 @@ app.get('/api/auth/profile', protect, async (req, res) => {
     }
     res.json(user)
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    })
+    next(error) // ส่ง error ไปยัง error handling middleware
   }
 })
 
@@ -207,9 +209,7 @@ app.put('/api/auth/profile', protect, validateProfile, async (req, res) => {
       isAdmin: updatedUser.isAdmin
     })
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    })
+    next(error) // ส่ง error ไปยัง error handling middleware
   }
 })
 
@@ -242,13 +242,13 @@ app.post('/api/upload', protect, admin, upload.single('image'), async (req, res)
       uploadStream.end(req.file.buffer)
 
     } catch (error) {
-      console.error('Upload error:', error)
-      res.status(500).json({
-        message: error.message
-      })
+      next(error) // ส่ง error ไปยัง error handling middleware
     }
   }
 )
+
+app.use(notFound)
+app.use(errorHandler)
 
 // เปิด Server ให้รอ Request ที่ PORT 5000
 app.listen(PORT, () => {
