@@ -7,7 +7,7 @@ export const notFound = (req, res, next) => {
 export const errorHandler = (err, req, res, next) => {
   console.error('ERROR:', err)
 
-  let statusCode = res.statusCode >= 400 ? res.statusCode : 500
+  let statusCode = err.statusCode || 500
 
   if (err.name === 'ValidationError') {
     statusCode = 400

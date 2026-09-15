@@ -16,7 +16,9 @@ function App() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('https://my-ecommerce-api-iowl.onrender.com/api/products')
+      const response = await axios.get(
+        'https://my-ecommerce-api-iowl.onrender.com/api/products'
+      )
       setProducts(response.data)
       setLoading(false)
     } catch (error) {
@@ -27,8 +29,15 @@ function App() {
 
   useEffect(() => {
     const storedUser = localStorage.getItem('userInfo')
-    if (storedUser) setUser(JSON.parse(storedUser))
-    fetchProducts()
+    const token = storedUser
+      ? JSON.parse(storedUser).token
+      : ''
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
   }, [])
 
   const handleLogout = () => {
@@ -80,28 +89,49 @@ function App() {
   const totalCartPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   const handleCheckout = async () => {
-    if (cartItems.length === 0) return alert('กรุณาเลือกสินค้าก่อนทำการสั่งซื้อ')
+    if (cartItems.length === 0) {
+      return alert('กรุณาเลือกสินค้าก่อนทำการสั่งซื้อ')
+    }
 
     try {
-      const orderData = {
+      const storedUser = localStorage.getItem('userInfo')
+
+     if (!storedUser) {
+       return alert('กรุณาเข้าสู่ระบบก่อนทำการสั่งซื้อ')
+     }
+
+     const token = JSON.parse(storedUser).token
+
+     const config = {
+       headers: {
+         Authorization: `Bearer ${token}`
+       }
+      }
+
+     const orderData = {
         orderItems: cartItems.map((item) => ({
           product: item._id || item.id,
-          title: item.title,
-          price: item.price,
           qty: item.quantity
-        })),
-        totalPrice: totalCartPrice
+        }))
       }
 
-      const response = await axios.post('https://my-ecommerce-api-iowl.onrender.com/api/orders', orderData)
+      const response = await axios.post(
+        'https://my-ecommerce-api-iowl.onrender.com/api/orders',
+        orderData,
+        config
+     )
 
       if (response.status === 201) {
-        alert('สั่งซื้อสำเร็จ! บันทึกออเดอร์ลงระบบเรียบร้อย')
+        alert('สั่งซื้อสำเร็จ!')
         setCartItems([])
       }
+
     } catch (error) {
-      alert('เกิดข้อผิดพลาดในการสั่งซื้อ')
-    }
+     alert(
+       error.response?.data?.message ||
+       'เกิดข้อผิดพลาดในการสั่งซื้อ'
+     )
+   }
   }
 
   if (loading) {
