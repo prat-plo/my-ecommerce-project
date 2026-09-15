@@ -29,15 +29,12 @@ function App() {
 
   useEffect(() => {
     const storedUser = localStorage.getItem('userInfo')
-    const token = storedUser
-      ? JSON.parse(storedUser).token
-      : ''
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
     }
+
+    fetchProducts()
   }, [])
 
   const handleLogout = () => {
