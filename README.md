@@ -34,7 +34,7 @@ A modern, responsive full-stack e-commerce web application built using the MERN 
 
 ### 🟠 Phase 2 — ทำให้ซื้อสินค้าได้จริง
 
-1. Checkout
+1. Checkout ✅
 2. Shipping Address
 3. Order System ใหม่
 4. Order History
