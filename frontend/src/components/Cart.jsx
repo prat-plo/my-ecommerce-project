@@ -1,4 +1,4 @@
-function Cart({ cartItems = [], totalCartPrice = 0, onIncreaseItem, onDecreaseItem, onRemoveItem }) {
+function Cart({ cartItems = [], totalCartPrice = 0, onIncreaseItem, onDecreaseItem, onRemoveItem, onCheckout }) {
   return (
     <div className="max-w-4xl mx-auto bg-slate-800 border border-slate-700 rounded-xl p-6 text-white shadow-xl">
       <h2 className="text-2xl font-bold mb-6 text-emerald-400 flex items-center gap-2">
@@ -58,11 +58,20 @@ function Cart({ cartItems = [], totalCartPrice = 0, onIncreaseItem, onDecreaseIt
         </div>
 
         {/* ส่วนแสดงราคารวมสุทธิ */}
-        <div className="mt-6 pt-6 border-t border-slate-700 flex justify-between items-center">
-          <span className="text-slate-400 text-lg font-medium">ราคารวมทั้งหมด:</span>
-          <span className="text-3xl font-extrabold text-emerald-400">
-            {totalCartPrice.toLocaleString()} ฿
-          </span>
+        <div className="mt-6 pt-6 border-t border-slate-700">
+          <div className="flex justify-between items-center">
+            <span className="text-slate-400 text-lg font-medium">ราคารวมทั้งหมด:</span>
+            <span className="text-3xl font-extrabold text-emerald-400">
+              {totalCartPrice.toLocaleString()} ฿
+            </span>
+          </div>
+          
+          <button
+            onClick={onCheckout}
+            className="w-full mt-6 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition"
+          >
+            🛒 สั่งซื้อสินค้า
+          </button>
         </div>
       </>
       )}
