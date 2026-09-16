@@ -5,6 +5,7 @@ import ProductCard from './components/ProductCard'
 import Cart from './components/Cart'
 import Admin from './components/Admin'
 import Login from './components/Login'
+import Register from './components/Register'
 import Profile from './components/Profile'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
+  const [showRegister, setShowRegister] = useState(false)
   const handleProfileUpdated = (updatedUser) => {setUser(updatedUser)}
 
   const fetchProducts = async () => {
@@ -144,7 +146,47 @@ function App() {
       <div className="max-w-6xl mx-auto">
         <Navbar cartCount={totalCartCount} user={user} onLogout={handleLogout} />
 
-        {!user && <Login onLoginSuccess={(userData) => setUser(userData)} />}
+        {!user && (
+          showRegister ? (
+            <>
+              <Register
+                onRegisterSuccess={() => setShowRegister(false)}
+              />
+
+             <div className="text-center mb-8">
+                <p className="text-slate-400">
+                  มีบัญชีอยู่แล้ว?
+                </p>
+
+                <button
+                  onClick={() => setShowRegister(false)}
+                  className="text-emerald-400 hover:text-emerald-300 font-bold"
+                >
+                  เข้าสู่ระบบ
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <Login
+                onLoginSuccess={(userData) => setUser(userData)}
+              />
+
+              <div className="text-center mb-8">
+                <p className="text-slate-400">
+                  ยังไม่มีบัญชี?
+                </p>
+
+               <button
+                 onClick={() => setShowRegister(true)}
+                 className="text-emerald-400 hover:text-emerald-300 font-bold"
+               >
+                 สมัครสมาชิก
+                </button>
+              </div>
+            </>
+         )
+        )}
         {user && (<Profile user={user} onProfileUpdated={handleProfileUpdated} />)}
 
         <h1 className="text-3xl font-bold mb-8 text-center text-slate-100">
