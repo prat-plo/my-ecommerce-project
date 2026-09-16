@@ -1,256 +1,259 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import Product from './models/Product.js'
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import User from './models/User.js'
-import { protect, admin } from './middleware/authMiddleware.js'
-import cors from 'cors'
-import orderRoutes from './routes/orderRoutes.js'
-import cloudinary from './config/cloudinary.js'
-import upload from './middleware/uploadMiddleware.js'
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import Product from "./models/Product.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "./models/User.js";
+import { protect, admin } from "./middleware/authMiddleware.js";
+import cors from "cors";
+import orderRoutes from "./routes/orderRoutes.js";
+import cloudinary from "./config/cloudinary.js";
+import upload from "./middleware/uploadMiddleware.js";
 import {
   validateRegister,
   validateLogin,
   validateProfile,
-  validateProduct
-} from './middleware/validationMiddleware.js'
-import {
-  notFound,
-  errorHandler
-} from './middleware/errorMiddleware.js'
+  validateProduct,
+} from "./middleware/validationMiddleware.js";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import addressRoutes from "./routes/addressRoutes.js";
 
-dotenv.config()
+dotenv.config();
 
-const app = express()
-const PORT = process.env.PORT || 5000
+const app = express();
+const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(express.json())
-app.use(cors())
-app.use('/api/orders', orderRoutes)
+app.use(express.json());
+app.use(cors());
+app.use("/api/orders", orderRoutes);
+app.use("/api/addresses", addressRoutes);
 
 // เชื่อมต่อ MongoDB Atlas
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB Connected Successfully!'))
-  .catch((err) => console.error('MongoDB Connection Error:', err))
-
+  .then(() => console.log("MongoDB Connected Successfully!"))
+  .catch((err) => console.error("MongoDB Connection Error:", err));
 
 // --- ROUTES FOR PRODUCTS ---
 
 // 1. READ: ดึงสินค้าทั้งหมดจากฐานข้อมูล
-app.get('/api/products', async (req, res) => {
+app.get("/api/products", async (req, res) => {
   try {
-    const products = await Product.find({})
-    res.json(products)
+    const products = await Product.find({});
+    res.json(products);
   } catch (error) {
-    next(error) // ส่ง error ไปยัง error handling middleware
+    next(error); // ส่ง error ไปยัง error handling middleware
   }
-})
+});
 
 // 2. CREATE: เพิ่มสินค้าใหม่ลงฐานข้อมูล
-app.post('/api/products', protect, admin, validateProduct, async (req, res) => {
+app.post("/api/products", protect, admin, validateProduct, async (req, res) => {
   try {
-    const { 
-      title, 
-      price, 
-      category, 
-      description, 
-      image, 
-      stock 
-    } = req.body
-    const newProduct = new Product({ 
-      title, 
-      price, 
-      category, 
-      description, 
-      image, 
-      stock 
-    })
-    const savedProduct = await newProduct.save()
-    res.status(201).json(savedProduct)
+    const { title, price, category, description, image, stock } = req.body;
+    const newProduct = new Product({
+      title,
+      price,
+      category,
+      description,
+      image,
+      stock,
+    });
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
   } catch (error) {
-    next(error) // ส่ง error ไปยัง error handling middleware
+    next(error); // ส่ง error ไปยัง error handling middleware
   }
-})
+});
 
 // 3. UPDATE: แก้ไขข้อมูลสินค้าตาม ID
-app.put('/api/products/:id', protect, admin, validateProduct, async (req, res) => {
-  try {
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true } // คืนค่าข้อมูลใหม่หลังอัปเดต
-    )
-    res.json(updatedProduct)
-  } catch (error) {
-    next(error) // ส่ง error ไปยัง error handling middleware
-  }
-})
+app.put(
+  "/api/products/:id",
+  protect,
+  admin,
+  validateProduct,
+  async (req, res) => {
+    try {
+      const updatedProduct = await Product.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }, // คืนค่าข้อมูลใหม่หลังอัปเดต
+      );
+      res.json(updatedProduct);
+    } catch (error) {
+      next(error); // ส่ง error ไปยัง error handling middleware
+    }
+  },
+);
 
 // 4. DELETE: ลบสินค้าตาม ID
-app.delete('/api/products/:id', protect, admin, async (req, res) => {
+app.delete("/api/products/:id", protect, admin, async (req, res) => {
   try {
-    await Product.findByIdAndDelete(req.params.id)
-    res.json({ message: 'Product deleted successfully' })
+    await Product.findByIdAndDelete(req.params.id);
+    res.json({ message: "Product deleted successfully" });
   } catch (error) {
-    next(error) // ส่ง error ไปยัง error handling middleware
+    next(error); // ส่ง error ไปยัง error handling middleware
   }
-})
+});
 
 // --- AUTH ROUTES ---
 
 // 1. REGISTER: สมัครสมาชิก
-app.post('/api/auth/register', validateRegister, async (req, res) => {
+app.post("/api/auth/register", validateRegister, async (req, res) => {
   try {
-    const { name, email, password } = req.body
+    const { name, email, password } = req.body;
 
     // เช็คว่ามี email นี้ในระบบหรือยัง
-    const userExists = await User.findOne({ email })
+    const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' })
+      return res.status(400).json({ message: "User already exists" });
     }
 
     // เข้ารหัส Password ด้วย bcrypt
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     // บันทึก User ลงฐานข้อมูล
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      isAdmin: false
-    })
+      isAdmin: false,
+    });
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      isAdmin: user.isAdmin
-    })
+      isAdmin: user.isAdmin,
+    });
   } catch (error) {
-    next(error) // ส่ง error ไปยัง error handling middleware
+    next(error); // ส่ง error ไปยัง error handling middleware
   }
-})
+});
 
 // 2. LOGIN: เข้าสู่ระบบและรับ JWT Token
-app.post('/api/auth/login', validateLogin, async (req, res) => {
+app.post("/api/auth/login", validateLogin, async (req, res) => {
   try {
-    const { email, password } = req.body
+    const { email, password } = req.body;
 
     // ค้นหา User จาก Email
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' })
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // ตรวจสอบ Password
-    const isMatch = await bcrypt.compare(password, user.password)
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' })
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // สร้าง JWT Token
     const token = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
       process.env.JWT_SECRET,
-      { expiresIn: '30d' }
-    )
+      { expiresIn: "30d" },
+    );
 
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
-      token
-    })
+      token,
+    });
   } catch (error) {
-    next(error) // ส่ง error ไปยัง error handling middleware
+    next(error); // ส่ง error ไปยัง error handling middleware
   }
-})
+});
 
 // 3. GET PROFILE
-app.get('/api/auth/profile', protect, async (req, res) => {
+app.get("/api/auth/profile", protect, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select('-password')
+    const user = await User.findById(req.user._id).select("-password");
     if (!user) {
       return res.status(404).json({
-        message: 'User not found'
-      })
+        message: "User not found",
+      });
     }
-    res.json(user)
+    res.json(user);
   } catch (error) {
-    next(error) // ส่ง error ไปยัง error handling middleware
+    next(error); // ส่ง error ไปยัง error handling middleware
   }
-})
+});
 
 // 4. UPDATE PROFILE
-app.put('/api/auth/profile', protect, validateProfile, async (req, res) => {
+app.put("/api/auth/profile", protect, validateProfile, async (req, res) => {
   try {
-    const { name, email } = req.body
-    const user = await User.findById(req.user._id)
+    const { name, email } = req.body;
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res.status(404).json({
-        message: 'User not found'
-      })
+        message: "User not found",
+      });
     }
 
-    user.name = name
-    user.email = email
-    const updatedUser = await user.save()
+    user.name = name;
+    user.email = email;
+    const updatedUser = await user.save();
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin
-    })
+      isAdmin: updatedUser.isAdmin,
+    });
   } catch (error) {
-    next(error) // ส่ง error ไปยัง error handling middleware
+    next(error); // ส่ง error ไปยัง error handling middleware
   }
-})
+});
 
 // --- IMAGE UPLOAD ROUTE ---
-app.post('/api/upload', protect, admin, upload.single('image'), async (req, res) => {
+app.post(
+  "/api/upload",
+  protect,
+  admin,
+  upload.single("image"),
+  async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({
-          message: 'Please select an image'
-        })
+          message: "Please select an image",
+        });
       }
 
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: 'my-ecommerce-project/products',
-          resource_type: 'image'
-        }, (error, result) => {
+          folder: "my-ecommerce-project/products",
+          resource_type: "image",
+        },
+        (error, result) => {
           if (error) {
-            console.error('Cloudinary upload error:', error)
+            console.error("Cloudinary upload error:", error);
             return res.status(500).json({
-              message: 'Image upload failed'
-            })
-          } res.json({
-            message: 'Image uploaded successfully',
-            imageUrl: result.secure_url
-          })
-        }
-      )
+              message: "Image upload failed",
+            });
+          }
+          res.json({
+            message: "Image uploaded successfully",
+            imageUrl: result.secure_url,
+          });
+        },
+      );
 
-      uploadStream.end(req.file.buffer)
-
+      uploadStream.end(req.file.buffer);
     } catch (error) {
-      next(error) // ส่ง error ไปยัง error handling middleware
+      next(error); // ส่ง error ไปยัง error handling middleware
     }
-  }
-)
+  },
+);
 
-app.use(notFound)
-app.use(errorHandler)
+app.use(notFound);
+app.use(errorHandler);
 
 // เปิด Server ให้รอ Request ที่ PORT 5000
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`)
-})
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
