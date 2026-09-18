@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import crypto from "crypto";
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 import { protect } from "../middleware/authMiddleware.js";
@@ -7,6 +8,7 @@ import { protect } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // POST /api/orders
+// สร้างคำสั่งซื้อใหม่
 router.post("/", protect, async (req, res, next) => {
   const session = await mongoose.startSession();
 
@@ -29,6 +31,7 @@ router.post("/", protect, async (req, res, next) => {
       !shippingAddress.postalCode
     ) {
       const error = new Error("กรุณากรอกข้อมูลที่อยู่จัดส่งให้ครบถ้วน");
+
       error.statusCode = 400;
       throw error;
     }
@@ -41,6 +44,7 @@ router.post("/", protect, async (req, res, next) => {
     for (const item of orderItems) {
       if (!item.product || !item.qty || item.qty <= 0) {
         const error = new Error("ข้อมูลสินค้าในคำสั่งซื้อไม่ถูกต้อง");
+
         error.statusCode = 400;
         throw error;
       }
@@ -48,22 +52,29 @@ router.post("/", protect, async (req, res, next) => {
       const product = await Product.findById(item.product).session(session);
 
       if (!product) {
-        throw new Error(`ไม่พบสินค้า ID: ${item.product}`);
+        const error = new Error(`ไม่พบสินค้า ID: ${item.product}`);
+
+        error.statusCode = 404;
+        throw error;
       }
 
       if (product.stock < item.qty) {
         const error = new Error(`สินค้า ${product.title} มีไม่เพียงพอ`);
+
         error.statusCode = 400;
         throw error;
       }
 
       const itemTotal = product.price * item.qty;
+
       totalPrice += itemTotal;
 
+      // ลด Stock
       product.stock -= item.qty;
 
       await product.save({ session });
 
+      // เก็บข้อมูลสินค้า ณ เวลาที่สั่งซื้อ
       verifiedItems.push({
         product: product._id,
         title: product.title,
@@ -72,11 +83,19 @@ router.post("/", protect, async (req, res, next) => {
       });
     }
 
+    // สร้างเลขที่คำสั่งซื้อ
+    const orderNumber = `ORD-${Date.now()}-${crypto
+      .randomBytes(3)
+      .toString("hex")
+      .toUpperCase()}`;
+
     const order = new Order({
+      orderNumber,
       orderItems: verifiedItems,
       totalPrice,
       user: req.user._id,
       shippingAddress,
+      updatedAt: new Date(),
     });
 
     const createdOrder = await order.save({ session });
@@ -88,6 +107,39 @@ router.post("/", protect, async (req, res, next) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
+
+    next(error);
+  }
+});
+
+// GET /api/orders/:id
+// ดูรายละเอียด Order ของตัวเอง
+router.get("/:id", protect, async (req, res, next) => {
+  try {
+    const order = await Order.findById(req.params.id).populate(
+      "user",
+      "name email",
+    );
+
+    if (!order) {
+      return res.status(404).json({
+        message: "ไม่พบคำสั่งซื้อ",
+      });
+    }
+
+    // User ดูได้เฉพาะ Order ของตัวเอง
+    // Admin ดู Order ของคนอื่นได้
+    if (
+      order.user._id.toString() !== req.user._id.toString() &&
+      !req.user.isAdmin
+    ) {
+      return res.status(403).json({
+        message: "ไม่มีสิทธิ์ดูคำสั่งซื้อนี้",
+      });
+    }
+
+    res.json(order);
+  } catch (error) {
     next(error);
   }
 });

@@ -135,7 +135,10 @@ function App() {
       if (response.status === 201) {
         setCartItems([]);
         setShowShippingAddress(false);
-        alert("สั่งซื้อสำเร็จ!");
+
+        alert(
+          `สั่งซื้อสำเร็จ!\nเลขที่คำสั่งซื้อ: ${response.data.orderNumber}`,
+        );
       }
     } catch (error) {
       console.error("Checkout error:", error);
