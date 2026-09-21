@@ -1,30 +1,35 @@
-import { useState } from 'react'
-import axios from 'axios'
+import { useState } from "react";
+import axios from "axios";
 
 function Login({ onLoginSuccess }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const response = await axios.post('https://my-ecommerce-api-iowl.onrender.com/api/auth/login', {
-        email,
-        password
-      })
+      const response = await axios.post(
+        "https://my-ecommerce-api-iowl.onrender.com/api/auth/login",
+        {
+          email,
+          password,
+        },
+      );
 
       // บันทึก User Info และ Token ลง localStorage
-      localStorage.setItem('userInfo', JSON.stringify(response.data))
-      alert('เข้าสู่ระบบสำเร็จ!')
-      onLoginSuccess(response.data)
+      localStorage.setItem("userInfo", JSON.stringify(response.data));
+      alert("เข้าสู่ระบบสำเร็จ!");
+      onLoginSuccess(response.data);
     } catch (error) {
-      alert(error.response?.data?.message || 'เข้าสู่ระบบไม่สำเร็จ')
+      alert(error.response?.data?.message || "เข้าสู่ระบบไม่สำเร็จ");
     }
-  }
+  };
 
   return (
     <div className="max-w-md mx-auto my-8 bg-slate-800 p-6 rounded-xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-center">เข้าสู่ระบบ (Login)</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">
+        เข้าสู่ระบบ (Login)
+      </h2>
       <form onSubmit={handleLogin} className="space-y-4">
         <div>
           <label className="block text-sm text-slate-300 mb-1">Email</label>
@@ -54,7 +59,7 @@ function Login({ onLoginSuccess }) {
         </button>
       </form>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

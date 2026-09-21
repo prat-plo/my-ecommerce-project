@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
 import ShippingAddress from "./components/ShippingAddress";
+import OrderHistory from "./components/OrderHistory";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -197,7 +198,11 @@ function App() {
             </>
           ))}
         {user && (
-          <Profile user={user} onProfileUpdated={handleProfileUpdated} />
+          <>
+            <Profile user={user} onProfileUpdated={handleProfileUpdated} />
+
+            <OrderHistory />
+          </>
         )}
 
         <h1 className="text-3xl font-bold mb-8 text-center text-slate-100">

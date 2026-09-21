@@ -112,6 +112,22 @@ router.post("/", protect, async (req, res, next) => {
   }
 });
 
+// GET /api/orders
+// ดูประวัติคำสั่งซื้อของตัวเอง
+router.get("/", protect, async (req, res, next) => {
+  try {
+    const orders = await Order.find({
+      user: req.user._id,
+    }).sort({
+      createdAt: -1,
+    });
+
+    res.json(orders);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // GET /api/orders/:id
 // ดูรายละเอียด Order ของตัวเอง
 router.get("/:id", protect, async (req, res, next) => {
