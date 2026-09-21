@@ -13,7 +13,7 @@ function Profile({ user, onProfileUpdated }) {
     try {
       const storedUser = JSON.parse(localStorage.getItem("userInfo"));
       const response = await axios.put(
-        "http://localhost:5000/api/auth/profile",
+        "https://my-ecommerce-api-iowl.onrender.com/api/auth/profile",
         { name, email },
         { headers: { Authorization: `Bearer ${storedUser.token}` } },
       );

@@ -25,7 +25,7 @@ function ShippingAddress({ onConfirm, onCancel }) {
         }
 
         const response = await axios.get(
-          "http://localhost:5000/api/addresses",
+          "https://my-ecommerce-api-iowl.onrender.com/api/addresses",
           {
             headers: {
               Authorization: `Bearer ${storedUser.token}`,

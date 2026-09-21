@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/addresses";
+const API_URL = "https://my-ecommerce-api-iowl.onrender.com/api/addresses";
 
 const emptyForm = {
   label: "",
