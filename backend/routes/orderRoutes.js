@@ -128,6 +128,52 @@ router.get("/", protect, async (req, res, next) => {
   }
 });
 
+// PATCH /api/orders/:id/status
+// Admin เปลี่ยนสถานะคำสั่งซื้อ
+router.patch("/:id/status", protect, async (req, res, next) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({
+        message: "Not authorized as an admin",
+      });
+    }
+
+    const { status } = req.body;
+
+    const allowedStatuses = [
+      "pending",
+      "confirmed",
+      "processing",
+      "shipped",
+      "delivered",
+      "cancelled",
+    ];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        message: "สถานะคำสั่งซื้อไม่ถูกต้อง",
+      });
+    }
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        message: "ไม่พบคำสั่งซื้อ",
+      });
+    }
+
+    order.status = status;
+    order.updatedAt = new Date();
+
+    const updatedOrder = await order.save();
+
+    res.json(updatedOrder);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // GET /api/orders/:id
 // ดูรายละเอียด Order ของตัวเอง
 router.get("/:id", protect, async (req, res, next) => {

@@ -83,6 +83,19 @@ const orderSchema = new mongoose.Schema({
     },
   },
 
+  status: {
+    type: String,
+    enum: [
+      "pending",
+      "confirmed",
+      "processing",
+      "shipped",
+      "delivered",
+      "cancelled",
+    ],
+    default: "pending",
+  },
+
   // เวลาสร้าง Order
   createdAt: {
     type: Date,

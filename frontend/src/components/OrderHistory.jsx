@@ -5,6 +5,14 @@ function OrderHistory() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const statusLabels = {
+    pending: "รอดำเนินการ",
+    confirmed: "ยืนยันคำสั่งซื้อ",
+    processing: "กำลังเตรียมสินค้า",
+    shipped: "จัดส่งแล้ว",
+    delivered: "จัดส่งสำเร็จ",
+    cancelled: "ยกเลิก",
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -79,6 +87,9 @@ function OrderHistory() {
 
                   <p className="text-emerald-400 font-bold">
                     {order.orderNumber}
+                  </p>
+                  <p className="text-white font-semibold">
+                    {statusLabels[order.status] || "รอดำเนินการ"}
                   </p>
                 </div>
 
