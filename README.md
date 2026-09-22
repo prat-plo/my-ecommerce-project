@@ -38,7 +38,7 @@ A modern, responsive full-stack e-commerce web application built using the MERN 
 2. Shipping Address ✅
 3. Order System ใหม่ ✅
 4. Order History ✅
-5. Order Status
+5. Order Status ✅
 6. Payment Method
 7. Shipping / Tracking
 
