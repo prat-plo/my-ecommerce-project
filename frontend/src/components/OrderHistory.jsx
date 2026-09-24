@@ -13,6 +13,10 @@ function OrderHistory() {
     delivered: "จัดส่งสำเร็จ",
     cancelled: "ยกเลิก",
   };
+  const paymentMethodLabels = {
+    cod: "เก็บเงินปลายทาง",
+    bank_transfer: "โอนเงินผ่านธนาคาร",
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -125,6 +129,14 @@ function OrderHistory() {
                   <span className="text-emerald-400 ml-2">
                     ฿{order.totalPrice.toLocaleString("th-TH")}
                   </span>
+                </p>
+              </div>
+
+              <div className="mt-2">
+                <p className="text-slate-400 text-sm">วิธีการชำระเงิน</p>
+
+                <p className="text-white font-semibold">
+                  {paymentMethodLabels[order.paymentMethod] || "ยังไม่ระบุ"}
                 </p>
               </div>
 

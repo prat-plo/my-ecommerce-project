@@ -13,7 +13,7 @@ router.post("/", protect, async (req, res, next) => {
   const session = await mongoose.startSession();
 
   try {
-    const { orderItems, shippingAddress } = req.body;
+    const { orderItems, shippingAddress, paymentMethod } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({
@@ -34,6 +34,14 @@ router.post("/", protect, async (req, res, next) => {
 
       error.statusCode = 400;
       throw error;
+    }
+
+    const allowedPaymentMethods = ["cod", "bank_transfer"];
+
+    if (paymentMethod && !allowedPaymentMethods.includes(paymentMethod)) {
+      return res.status(400).json({
+        message: "วิธีการชำระเงินไม่ถูกต้อง",
+      });
     }
 
     session.startTransaction();
@@ -95,6 +103,7 @@ router.post("/", protect, async (req, res, next) => {
       totalPrice,
       user: req.user._id,
       shippingAddress,
+      paymentMethod: paymentMethod || "cod",
       updatedAt: new Date(),
     });
 

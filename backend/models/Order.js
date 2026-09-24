@@ -96,6 +96,12 @@ const orderSchema = new mongoose.Schema({
     default: "pending",
   },
 
+  paymentMethod: {
+    type: String,
+    enum: ["cod", "bank_transfer"],
+    default: "cod",
+  },
+
   // เวลาสร้าง Order
   createdAt: {
     type: Date,

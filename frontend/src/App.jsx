@@ -99,7 +99,7 @@ function App() {
     0,
   );
 
-  const handleCheckout = async (shippingAddress) => {
+  const handleCheckout = async (checkoutData) => {
     if (cartItems.length === 0) {
       return alert("กรุณาเลือกสินค้าก่อนทำการสั่งซื้อ");
     }
@@ -119,12 +119,15 @@ function App() {
         },
       };
 
+      const { paymentMethod, ...shippingAddress } = checkoutData;
+
       const orderData = {
         orderItems: cartItems.map((item) => ({
           product: item._id || item.id,
           qty: item.quantity,
         })),
         shippingAddress,
+        paymentMethod,
       };
 
       const response = await axios.post(

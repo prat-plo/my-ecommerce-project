@@ -4,6 +4,7 @@ import axios from "axios";
 function ShippingAddress({ onConfirm, onCancel }) {
   const [addresses, setAddresses] = useState([]);
   const [loadingAddresses, setLoadingAddresses] = useState(true);
+  const [paymentMethod, setPaymentMethod] = useState("cod");
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -80,7 +81,10 @@ function ShippingAddress({ onConfirm, onCancel }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    onConfirm(formData);
+    onConfirm({
+      ...formData,
+      paymentMethod,
+    });
   };
 
   return (
@@ -218,6 +222,38 @@ function ShippingAddress({ onConfirm, onCancel }) {
             className="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600"
             placeholder="10110"
           />
+        </div>
+
+        <div className="pt-4">
+          <label className="block text-sm text-slate-300 mb-2">
+            💳 วิธีการชำระเงิน
+          </label>
+
+          <div className="space-y-3">
+            <label className="flex items-center gap-3 bg-slate-700 p-4 rounded-lg border border-slate-600 cursor-pointer">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="cod"
+                checked={paymentMethod === "cod"}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              />
+
+              <span>เก็บเงินปลายทาง (COD)</span>
+            </label>
+
+            <label className="flex items-center gap-3 bg-slate-700 p-4 rounded-lg border border-slate-600 cursor-pointer">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="bank_transfer"
+                checked={paymentMethod === "bank_transfer"}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              />
+
+              <span>โอนเงินผ่านธนาคาร</span>
+            </label>
+          </div>
         </div>
 
         <div className="flex gap-3 pt-4">
