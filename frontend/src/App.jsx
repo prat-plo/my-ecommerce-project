@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import API_BASE_URL from "./config/api";
 import Navbar from "./components/Navbar";
 import ProductCard from "./components/ProductCard";
 import Cart from "./components/Cart";
@@ -23,9 +24,7 @@ function App() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(
-        "https://my-ecommerce-api-iowl.onrender.com/api/products",
-      );
+      const response = await axios.get(`${API_BASE_URL}/api/products`);
       setProducts(response.data);
       setLoading(false);
     } catch (error) {
@@ -131,7 +130,7 @@ function App() {
       };
 
       const response = await axios.post(
-        "https://my-ecommerce-api-iowl.onrender.com/api/orders",
+        `${API_BASE_URL}/api/orders`,
         orderData,
         config,
       );

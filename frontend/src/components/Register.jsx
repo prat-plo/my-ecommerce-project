@@ -1,41 +1,36 @@
-import { useState } from 'react'
-import axios from 'axios'
+import { useState } from "react";
+import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 function Register({ onRegisterSuccess }) {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleRegister = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (password !== confirmPassword) {
-      return alert('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน')
+      return alert("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
     }
 
     try {
-      await axios.post(
-        'https://my-ecommerce-api-iowl.onrender.com/api/auth/register',
-        {
-          name,
-          email,
-          password
-        }
-      )
+      await axios.post(`${API_BASE_URL}/api/auth/register`, {
+        name,
+        email,
+        password,
+      });
 
-      alert('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ')
+      alert("สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ");
 
       if (onRegisterSuccess) {
-        onRegisterSuccess()
+        onRegisterSuccess();
       }
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-        'สมัครสมาชิกไม่สำเร็จ'
-      )
+      alert(error.response?.data?.message || "สมัครสมาชิกไม่สำเร็จ");
     }
-  }
+  };
 
   return (
     <div className="max-w-md mx-auto my-8 bg-slate-800 p-6 rounded-xl shadow-lg">
@@ -45,9 +40,7 @@ function Register({ onRegisterSuccess }) {
 
       <form onSubmit={handleRegister} className="space-y-4">
         <div>
-          <label className="block text-sm text-slate-300 mb-1">
-            Name
-          </label>
+          <label className="block text-sm text-slate-300 mb-1">Name</label>
 
           <input
             type="text"
@@ -60,9 +53,7 @@ function Register({ onRegisterSuccess }) {
         </div>
 
         <div>
-          <label className="block text-sm text-slate-300 mb-1">
-            Email
-          </label>
+          <label className="block text-sm text-slate-300 mb-1">Email</label>
 
           <input
             type="email"
@@ -75,9 +66,7 @@ function Register({ onRegisterSuccess }) {
         </div>
 
         <div>
-          <label className="block text-sm text-slate-300 mb-1">
-            Password
-          </label>
+          <label className="block text-sm text-slate-300 mb-1">Password</label>
 
           <input
             type="password"
@@ -114,7 +103,7 @@ function Register({ onRegisterSuccess }) {
         </button>
       </form>
     </div>
-  )
+  );
 }
 
-export default Register
+export default Register;

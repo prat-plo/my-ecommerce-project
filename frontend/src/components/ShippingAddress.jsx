@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 function ShippingAddress({ onConfirm, onCancel }) {
   const [addresses, setAddresses] = useState([]);
@@ -25,14 +26,11 @@ function ShippingAddress({ onConfirm, onCancel }) {
           return;
         }
 
-        const response = await axios.get(
-          "https://my-ecommerce-api-iowl.onrender.com/api/addresses",
-          {
-            headers: {
-              Authorization: `Bearer ${storedUser.token}`,
-            },
+        const response = await axios.get(`${API_BASE_URL}/api/addresses`, {
+          headers: {
+            Authorization: `Bearer ${storedUser.token}`,
           },
-        );
+        });
 
         setAddresses(response.data || []);
       } catch (error) {

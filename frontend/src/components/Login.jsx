@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
@@ -8,13 +9,10 @@ function Login({ onLoginSuccess }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "https://my-ecommerce-api-iowl.onrender.com/api/auth/login",
-        {
-          email,
-          password,
-        },
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+        email,
+        password,
+      });
 
       // บันทึก User Info และ Token ลง localStorage
       localStorage.setItem("userInfo", JSON.stringify(response.data));

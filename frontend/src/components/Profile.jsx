@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import AddressManager from "./AddressManager";
+import API_BASE_URL from "../config/api";
 
 function Profile({ user, onProfileUpdated }) {
   const [name, setName] = useState(user?.name || "");
@@ -13,7 +14,7 @@ function Profile({ user, onProfileUpdated }) {
     try {
       const storedUser = JSON.parse(localStorage.getItem("userInfo"));
       const response = await axios.put(
-        "https://my-ecommerce-api-iowl.onrender.com/api/auth/profile",
+        `${API_BASE_URL}/api/auth/profile`,
         { name, email },
         { headers: { Authorization: `Bearer ${storedUser.token}` } },
       );

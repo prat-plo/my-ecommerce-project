@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 function OrderHistory() {
   const [orders, setOrders] = useState([]);
@@ -19,39 +20,84 @@ function OrderHistory() {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchOrders = async () => {
+      setLoading(true);
+      setErrorMessage("");
+
       try {
         const storedUser = localStorage.getItem("userInfo");
 
         if (!storedUser) {
-          setLoading(false);
+          if (isMounted) {
+            setErrorMessage("กรุณาเข้าสู่ระบบเพื่อดูประวัติคำสั่งซื้อ");
+          }
           return;
         }
 
-        const token = JSON.parse(storedUser).token;
+        let userInfo;
 
-        const response = await axios.get(
-          "https://my-ecommerce-api-iowl.onrender.com/api/orders",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        try {
+          userInfo = JSON.parse(storedUser);
+        } catch {
+          localStorage.removeItem("userInfo");
+
+          if (isMounted) {
+            setErrorMessage("ข้อมูลเข้าสู่ระบบไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
+          }
+          return;
+        }
+
+        const token = userInfo?.token;
+
+        if (!token) {
+          if (isMounted) {
+            setErrorMessage("ไม่พบ Token กรุณาเข้าสู่ระบบใหม่");
+          }
+          return;
+        }
+
+        const response = await axios.get(`${API_BASE_URL}/api/orders`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
+        });
 
-        setOrders(response.data);
+        if (isMounted) {
+          setOrders(Array.isArray(response.data) ? response.data : []);
+        }
       } catch (error) {
         console.error("Order History error:", error);
 
-        setErrorMessage(
-          error.response?.data?.message || "ไม่สามารถโหลดประวัติคำสั่งซื้อได้",
-        );
+        if (isMounted) {
+          if (error.response?.status === 401) {
+            setErrorMessage("เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่");
+          } else if (error.response?.status === 403) {
+            setErrorMessage("คุณไม่มีสิทธิ์ดูประวัติคำสั่งซื้อ");
+          } else if (!error.response) {
+            setErrorMessage(
+              "ไม่สามารถเชื่อมต่อ Backend ได้ กรุณาตรวจสอบเซิร์ฟเวอร์",
+            );
+          } else {
+            setErrorMessage(
+              error.response.data?.message ||
+                "ไม่สามารถโหลดประวัติคำสั่งซื้อได้",
+            );
+          }
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchOrders();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (loading) {
