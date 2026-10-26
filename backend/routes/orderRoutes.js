@@ -10,7 +10,8 @@ const router = express.Router();
 // POST /api/orders
 // สร้างคำสั่งซื้อใหม่
 router.post("/", protect, async (req, res, next) => {
-  const session = await mongoose.startSession();
+  let session;
+  let transactionStarted = false;
 
   try {
     const { orderItems, shippingAddress, paymentMethod } = req.body;
@@ -44,7 +45,9 @@ router.post("/", protect, async (req, res, next) => {
       });
     }
 
+    session = await mongoose.startSession();
     session.startTransaction();
+    transactionStarted = true;
 
     let totalPrice = 0;
     const verifiedItems = [];
@@ -110,14 +113,18 @@ router.post("/", protect, async (req, res, next) => {
     const createdOrder = await order.save({ session });
 
     await session.commitTransaction();
-    session.endSession();
+    transactionStarted = false;
 
     res.status(201).json(createdOrder);
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
-
     next(error);
+  } finally {
+    if (session) {
+      if (transactionStarted && session.inTransaction()) {
+        await session.abortTransaction();
+      }
+      await session.endSession();
+    }
   }
 });
 

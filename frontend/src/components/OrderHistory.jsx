@@ -182,7 +182,8 @@ function OrderHistory() {
                 <p className="text-slate-400 text-sm">วิธีการชำระเงิน</p>
 
                 <p className="text-white font-semibold">
-                  {paymentMethodLabels[order.paymentMethod] || "ยังไม่ระบุ"}
+                  {paymentMethodLabels[order.paymentMethod || "cod"] ||
+                    "ยังไม่ระบุ"}
                 </p>
               </div>
 
