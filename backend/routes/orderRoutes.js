@@ -154,7 +154,7 @@ router.patch("/:id/status", protect, async (req, res, next) => {
       });
     }
 
-    const { status } = req.body;
+    const { status, carrier, trackingNumber, trackingUrl } = req.body;
 
     const allowedStatuses = [
       "pending",
@@ -179,12 +179,66 @@ router.patch("/:id/status", protect, async (req, res, next) => {
       });
     }
 
+    if (status === "shipped") {
+      const cleanCarrier = typeof carrier === "string" ? carrier.trim() : "";
+      const cleanTrackingNumber =
+        typeof trackingNumber === "string" ? trackingNumber.trim() : "";
+      const cleanTrackingUrl =
+        typeof trackingUrl === "string" ? trackingUrl.trim() : "";
+
+      if (!cleanCarrier || !cleanTrackingNumber || !cleanTrackingUrl) {
+        return res.status(400).json({
+          message: "กรุณากรอกบริษัทขนส่ง เลขพัสดุ และลิงก์ติดตาม",
+        });
+      }
+
+      try {
+        const parsedUrl = new URL(cleanTrackingUrl);
+
+        if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+          throw new Error("Invalid protocol");
+        }
+      } catch {
+        return res.status(400).json({
+          message:
+            "ลิงก์ติดตามต้องเป็น URL ที่ขึ้นต้นด้วย http:// หรือ https://",
+        });
+      }
+
+      order.tracking = {
+        carrier: cleanCarrier,
+        trackingNumber: cleanTrackingNumber,
+        trackingUrl: cleanTrackingUrl,
+        shippedAt: order.tracking?.shippedAt || new Date(),
+      };
+    }
+
     order.status = status;
     order.updatedAt = new Date();
 
     const updatedOrder = await order.save();
 
     res.json(updatedOrder);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /api/orders/admin
+// Admin ดูคำสั่งซื้อทั้งหมด
+router.get("/admin", protect, async (req, res, next) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({
+        message: "Not authorized as an admin",
+      });
+    }
+
+    const orders = await Order.find({})
+      .populate("user", "name email")
+      .sort({ createdAt: -1 });
+
+    res.json(orders);
   } catch (error) {
     next(error);
   }

@@ -102,6 +102,28 @@ const orderSchema = new mongoose.Schema({
     default: "cod",
   },
 
+  tracking: {
+    carrier: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    trackingNumber: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    trackingUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    shippedAt: {
+      type: Date,
+      default: null,
+    },
+  },
+
   // เวลาสร้าง Order
   createdAt: {
     type: Date,

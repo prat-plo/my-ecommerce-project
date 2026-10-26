@@ -95,9 +95,9 @@
 - [x] Order History — มี API สำหรับดึงคำสั่งซื้อของผู้ใช้แล้ว แต่ต้องตรวจสอบ/แก้การเชื่อมต่อจาก Frontend และทดสอบทั้ง Localhost กับ Deployment
 - [x] Order Status API — มี API สำหรับ Admin เปลี่ยนสถานะคำสั่งซื้อ
 - [x] Payment Method — Backend รองรับ COD และ Bank Transfer; ตรวจสอบ UI และ validation ให้ครบก่อนปิดงาน
-- [ ] Shipping / Tracking
+- [x] Shipping / Tracking
 
-**สถานะ: กำลังดำเนินการ** — พัฒนาระบบจัดส่งและติดตามสถานะพัสดุ (Shipping / Tracking)
+**สถานะ: เสร็จแล้ว**
 
 ### 🟡 Phase 3 — เพิ่มความสามารถของร้านค้า
 
@@ -110,7 +110,7 @@
 - [ ] Coupon
 - [ ] Product Variant
 
-**สถานะ: ยังไม่เริ่ม / รอทำหลัง Phase 2**
+**สถานะ: กำลังดำเนินการ** - พัฒนาฟีเจอร์ Search
 
 ### 🟢 Phase 4 — พัฒนาระบบ Admin
 
@@ -122,7 +122,7 @@
 - [ ] Review Management
 - [ ] Coupon Management
 
-**สถานะ: วางแผนไว้**
+**สถานะ: ยังไม่เริ่ม / รอทำหลัง Phase 3**
 
 ### 🔵 Phase 5 — เตรียมระบบสำหรับ Production
 

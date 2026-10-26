@@ -148,6 +148,33 @@ function OrderHistory() {
                 </div>
               </div>
 
+              {order.tracking?.trackingNumber && (
+                <div className="mt-2 rounded-lg border border-slate-700 bg-slate-900/60 p-3">
+                  <p className="text-sm text-slate-400">ข้อมูลจัดส่ง</p>
+                  <p className="text-white">
+                    {order.tracking.carrier} · {order.tracking.trackingNumber}
+                  </p>
+                  {order.tracking.shippedAt && (
+                    <p className="text-xs text-slate-400">
+                      จัดส่งเมื่อ{" "}
+                      {new Date(order.tracking.shippedAt).toLocaleString(
+                        "th-TH",
+                      )}
+                    </p>
+                  )}
+                  {order.tracking.trackingUrl && (
+                    <a
+                      href={order.tracking.trackingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-block text-emerald-400 hover:text-emerald-300 underline"
+                    >
+                      ติดตามพัสดุ
+                    </a>
+                  )}
+                </div>
+              )}
+
               <div className="border-t border-slate-700 pt-4">
                 <p className="text-white font-bold mb-3">รายการสินค้า</p>
 

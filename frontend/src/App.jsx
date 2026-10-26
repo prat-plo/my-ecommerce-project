@@ -10,6 +10,7 @@ import Register from "./components/Register";
 import Profile from "./components/Profile";
 import ShippingAddress from "./components/ShippingAddress";
 import OrderHistory from "./components/OrderHistory";
+import AdminOrders from "./components/AdminOrders";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -248,7 +249,12 @@ function App() {
           />
         )}
 
-        {user && user.isAdmin && <Admin onProductAdded={fetchProducts} />}
+        {user && user.isAdmin && (
+          <>
+            <Admin onProductAdded={fetchProducts} />
+            <AdminOrders />
+          </>
+        )}
       </div>
     </div>
   );
