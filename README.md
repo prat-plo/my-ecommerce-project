@@ -92,9 +92,9 @@
 - [x] Checkout และสร้างคำสั่งซื้อ
 - [x] Shipping Address
 - [x] Order System และการบันทึกคำสั่งซื้อ
-- [x] Order History — มี API สำหรับดึงคำสั่งซื้อของผู้ใช้แล้ว แต่ต้องตรวจสอบ/แก้การเชื่อมต่อจาก Frontend และทดสอบทั้ง Localhost กับ Deployment
-- [x] Order Status API — มี API สำหรับ Admin เปลี่ยนสถานะคำสั่งซื้อ
-- [x] Payment Method — Backend รองรับ COD และ Bank Transfer; ตรวจสอบ UI และ validation ให้ครบก่อนปิดงาน
+- [x] Order History
+- [x] Order Status API
+- [x] Payment Method
 - [x] Shipping / Tracking
 
 **สถานะ: เสร็จแล้ว**
