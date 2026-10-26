@@ -21,6 +21,7 @@
 ## ✨ ฟีเจอร์ของเว็บไซต์
 
 ### 👤 บัญชีผู้ใช้และความปลอดภัย
+
 - สมัครสมาชิกและเข้าสู่ระบบ
 - ใช้ JSON Web Token (JWT) สำหรับยืนยันตัวตนใน API ที่ต้องเข้าสู่ระบบ
 - เข้ารหัสรหัสผ่านด้วย bcryptjs
@@ -28,6 +29,7 @@
 - ดูและแก้ไขข้อมูลโปรไฟล์ผู้ใช้
 
 ### 🛍️ สินค้าและสต็อก
+
 - ดึงข้อมูลสินค้าแบบไดนามิกจาก Backend และ MongoDB
 - รองรับการอัปโหลดรูปภาพสินค้าไปยัง Cloudinary
 - Admin สามารถเพิ่ม แก้ไข และลบสินค้าได้
@@ -35,6 +37,7 @@
 - ตรวจสอบสต็อกก่อนรับคำสั่งซื้อและลดสต็อกเมื่อสร้างคำสั่งซื้อสำเร็จ
 
 ### 🛒 ตะกร้าสินค้าและ Checkout
+
 - เพิ่มสินค้าในตะกร้า
 - เพิ่มหรือลดจำนวนสินค้าและนำสินค้าออกจากตะกร้า
 - คำนวณราคารวมของสินค้าในตะกร้า
@@ -42,6 +45,7 @@
 - ตรวจสอบข้อมูลคำสั่งซื้อและจำนวนสินค้าในสต็อกฝั่ง Backend
 
 ### 📦 ที่อยู่และคำสั่งซื้อ
+
 - บันทึกที่อยู่จัดส่งหลายรายการสำหรับบัญชีผู้ใช้
 - ดู เพิ่ม แก้ไข และลบที่อยู่ที่บันทึกไว้
 - สร้างคำสั่งซื้อโดยผูกกับผู้ใช้ที่เข้าสู่ระบบ
@@ -53,11 +57,13 @@
 > **ขอบเขตการชำระเงิน:** ตัวเลือกวิธีชำระเงินไม่ได้หมายความว่ามี Payment Gateway หรือการตัดเงินจริงแล้ว การเชื่อมต่อเกตเวย์วางไว้ใน Phase 5
 
 ### 🧰 Validation และ Error Handling
+
 - ตรวจสอบข้อมูลที่จำเป็นก่อนดำเนินการ
 - ส่ง HTTP status และข้อความผิดพลาดสำหรับข้อมูลไม่ถูกต้อง ไม่พบข้อมูล หรือไม่มีสิทธิ์
 - มี Middleware สำหรับจัดการ API ที่ไม่พบและข้อผิดพลาดส่วนกลาง
 
 ### 🎨 ส่วนติดต่อผู้ใช้
+
 - สร้าง UI ด้วย React และ Tailwind CSS
 - ใช้ React Hooks (useState, useEffect) จัดการ state และ lifecycle
 - ใช้ Axios เรียก REST API
@@ -70,6 +76,7 @@
 สถานะด้านล่างแยกฟีเจอร์ที่มี API แล้วออกจากงานที่ยังต้องตรวจสอบบน Frontend เพื่อไม่ให้เข้าใจว่าทุกส่วนเสร็จสมบูรณ์แล้ว
 
 ### 🔴 Phase 1 — ทำให้ระบบพื้นฐานถูกต้อง
+
 - [x] แก้ไขและตรวจสอบความปลอดภัยของ isAdmin
 - [x] Authentication / Authorization
 - [x] User Profile
@@ -81,17 +88,19 @@
 **สถานะ: เสร็จแล้ว**
 
 ### 🟠 Phase 2 — ทำให้ซื้อสินค้าได้จริง
+
 - [x] Checkout และสร้างคำสั่งซื้อ
 - [x] Shipping Address
 - [x] Order System และการบันทึกคำสั่งซื้อ
-- [ ] Order History — มี API สำหรับดึงคำสั่งซื้อของผู้ใช้แล้ว แต่ต้องตรวจสอบ/แก้การเชื่อมต่อจาก Frontend และทดสอบทั้ง Localhost กับ Deployment
+- [x] Order History — มี API สำหรับดึงคำสั่งซื้อของผู้ใช้แล้ว แต่ต้องตรวจสอบ/แก้การเชื่อมต่อจาก Frontend และทดสอบทั้ง Localhost กับ Deployment
 - [x] Order Status API — มี API สำหรับ Admin เปลี่ยนสถานะคำสั่งซื้อ
-- [ ] Payment Method — Backend รองรับ COD และ Bank Transfer; ตรวจสอบ UI และ validation ให้ครบก่อนปิดงาน
+- [x] Payment Method — Backend รองรับ COD และ Bank Transfer; ตรวจสอบ UI และ validation ให้ครบก่อนปิดงาน
 - [ ] Shipping / Tracking
 
-**สถานะ: กำลังดำเนินการ** — งานสำคัญถัดไปคือทำให้หน้า Order History โหลดข้อมูลจาก API ได้สม่ำเสมอ และทดสอบ flow คำสั่งซื้อบนระบบที่ deploy แล้ว
+**สถานะ: กำลังดำเนินการ** — พัฒนาระบบจัดส่งและติดตามสถานะพัสดุ (Shipping / Tracking)
 
 ### 🟡 Phase 3 — เพิ่มความสามารถของร้านค้า
+
 - [ ] Search
 - [ ] Filter
 - [ ] Sort
@@ -104,6 +113,7 @@
 **สถานะ: ยังไม่เริ่ม / รอทำหลัง Phase 2**
 
 ### 🟢 Phase 4 — พัฒนาระบบ Admin
+
 - [ ] Dashboard
 - [ ] Sales Analytics
 - [ ] User Management
@@ -115,6 +125,7 @@
 **สถานะ: วางแผนไว้**
 
 ### 🔵 Phase 5 — เตรียมระบบสำหรับ Production
+
 - [ ] Payment Gateway
 - [ ] Email Notification
 - [ ] Forgot Password
@@ -131,25 +142,25 @@
 
 ## 🛠️ Tech Stack & Deployment
 
-| ส่วน | เทคโนโลยี | หน้าที่ |
-|---|---|---|
-| Frontend | React 19 | สร้าง UI และส่วนประกอบเว็บไซต์ |
-| Frontend tooling | Vite | Development server และ build |
-| Styling | Tailwind CSS 4 | จัดรูปแบบ UI |
-| HTTP Client | Axios | เรียก API จาก Frontend |
-| Backend Runtime | Node.js | รัน Backend |
-| Backend Framework | Express 5 | REST API และ Middleware |
-| Database | MongoDB Atlas / MongoDB | จัดเก็บข้อมูลผู้ใช้ สินค้า ที่อยู่ และคำสั่งซื้อ |
-| ODM | Mongoose | Schema และการติดต่อ MongoDB |
-| Authentication | JWT + bcryptjs | Token authentication และ password hashing |
-| Image Upload | Multer + Cloudinary | รับไฟล์และจัดเก็บรูปภาพสินค้า |
-| Version Control | Git + GitHub | จัดการ source code |
-| Frontend Deployment | Vercel | โฮสต์ Frontend |
-| Backend Deployment | Render | โฮสต์ REST API |
+| ส่วน                | เทคโนโลยี               | หน้าที่                                          |
+| ------------------- | ----------------------- | ------------------------------------------------ |
+| Frontend            | React 19                | สร้าง UI และส่วนประกอบเว็บไซต์                   |
+| Frontend tooling    | Vite                    | Development server และ build                     |
+| Styling             | Tailwind CSS 4          | จัดรูปแบบ UI                                     |
+| HTTP Client         | Axios                   | เรียก API จาก Frontend                           |
+| Backend Runtime     | Node.js                 | รัน Backend                                      |
+| Backend Framework   | Express 5               | REST API และ Middleware                          |
+| Database            | MongoDB Atlas / MongoDB | จัดเก็บข้อมูลผู้ใช้ สินค้า ที่อยู่ และคำสั่งซื้อ |
+| ODM                 | Mongoose                | Schema และการติดต่อ MongoDB                      |
+| Authentication      | JWT + bcryptjs          | Token authentication และ password hashing        |
+| Image Upload        | Multer + Cloudinary     | รับไฟล์และจัดเก็บรูปภาพสินค้า                    |
+| Version Control     | Git + GitHub            | จัดการ source code                               |
+| Frontend Deployment | Vercel                  | โฮสต์ Frontend                                   |
+| Backend Deployment  | Render                  | โฮสต์ REST API                                   |
 
 ### ภาพรวมการทำงาน
 
-~~~text
+```text
 ผู้ใช้
   |
   v
@@ -162,7 +173,7 @@ Node.js + Express (Backend API on Render)
   +------ MongoDB / Mongoose
   |
   +------ Cloudinary (product images)
-~~~
+```
 
 ### Environment Variables
 
@@ -181,7 +192,7 @@ Node.js + Express (Backend API on Render)
 
 โครงสร้างหลักโดยสรุป (ไฟล์ย่อยอาจเพิ่มขึ้นระหว่างพัฒนา):
 
-~~~text
+```text
 my-ecommerce-project/
 ├── backend/
 │   ├── config/          # การตั้งค่าและเชื่อมต่อฐานข้อมูล
@@ -200,44 +211,45 @@ my-ecommerce-project/
 │   ├── package.json
 │   └── vite.config.js
 └── README.md
-~~~
+```
 
 ---
 
 ## 🚀 เริ่มต้นใช้งานบนเครื่อง (Local Development)
 
 ### สิ่งที่ต้องมี
+
 - Node.js และ npm
 - MongoDB Atlas หรือ MongoDB ที่รันในเครื่อง
 - บัญชี Cloudinary หากต้องการทดสอบการอัปโหลดรูปภาพ
 
 ### 1. Clone Repository
 
-~~~bash
+```bash
 git clone https://github.com/prat-plo/my-ecommerce-project.git
 cd my-ecommerce-project
-~~~
+```
 
 ### 2. ตั้งค่าและรัน Backend
 
-~~~bash
+```bash
 cd backend
 npm install
-~~~
+```
 
 สร้างไฟล์ .env ภายในโฟลเดอร์ backend/ แล้วกำหนดค่าตามที่โค้ดใช้งานจริง ตัวอย่าง:
 
-~~~env
+```env
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=replace_with_a_long_random_secret
-~~~
+```
 
 เพิ่มค่าการเชื่อมต่อ Cloudinary ตามชื่อตัวแปรที่ใช้อยู่ในโค้ด จากนั้นเริ่ม Backend:
 
-~~~bash
+```bash
 npm run dev
-~~~
+```
 
 Backend จะทำงานบนพอร์ตที่กำหนด เช่น http://localhost:5000
 
@@ -245,11 +257,11 @@ Backend จะทำงานบนพอร์ตที่กำหนด เ�
 
 เปิด Terminal อีกหน้าต่างจาก root ของโปรเจกต์:
 
-~~~bash
+```bash
 cd frontend
 npm install
 npm run dev
-~~~
+```
 
 Vite จะแสดง URL สำหรับเปิดเว็บไซต์ใน Terminal โดยทั่วไปคือ http://localhost:5173
 
@@ -259,19 +271,19 @@ Vite จะแสดง URL สำหรับเปิดเว็บไซต�
 
 ## 🔌 API ที่สำคัญ
 
-| Method | Endpoint | หน้าที่ | สิทธิ์ |
-|---|---|---|---|
-| POST | /api/auth/register | สมัครสมาชิก | Public |
-| POST | /api/auth/login | เข้าสู่ระบบและรับ token | Public |
-| GET | /api/products | ดูรายการสินค้า | Public |
-| POST | /api/products | เพิ่มสินค้า | Admin |
-| POST | /api/orders | สร้างคำสั่งซื้อ | ต้องเข้าสู่ระบบ |
-| GET | /api/orders | ดูประวัติคำสั่งซื้อของตนเอง | ต้องเข้าสู่ระบบ |
-| PATCH | /api/orders/:id/status | เปลี่ยนสถานะคำสั่งซื้อ | Admin |
-| GET | /api/addresses | ดูที่อยู่ที่บันทึกไว้ | ต้องเข้าสู่ระบบ |
-| POST | /api/addresses | เพิ่มที่อยู่ | ต้องเข้าสู่ระบบ |
-| PUT | /api/addresses/:id | แก้ไขที่อยู่ | ต้องเข้าสู่ระบบ |
-| DELETE | /api/addresses/:id | ลบที่อยู่ | ต้องเข้าสู่ระบบ |
+| Method | Endpoint               | หน้าที่                     | สิทธิ์          |
+| ------ | ---------------------- | --------------------------- | --------------- |
+| POST   | /api/auth/register     | สมัครสมาชิก                 | Public          |
+| POST   | /api/auth/login        | เข้าสู่ระบบและรับ token     | Public          |
+| GET    | /api/products          | ดูรายการสินค้า              | Public          |
+| POST   | /api/products          | เพิ่มสินค้า                 | Admin           |
+| POST   | /api/orders            | สร้างคำสั่งซื้อ             | ต้องเข้าสู่ระบบ |
+| GET    | /api/orders            | ดูประวัติคำสั่งซื้อของตนเอง | ต้องเข้าสู่ระบบ |
+| PATCH  | /api/orders/:id/status | เปลี่ยนสถานะคำสั่งซื้อ      | Admin           |
+| GET    | /api/addresses         | ดูที่อยู่ที่บันทึกไว้       | ต้องเข้าสู่ระบบ |
+| POST   | /api/addresses         | เพิ่มที่อยู่                | ต้องเข้าสู่ระบบ |
+| PUT    | /api/addresses/:id     | แก้ไขที่อยู่                | ต้องเข้าสู่ระบบ |
+| DELETE | /api/addresses/:id     | ลบที่อยู่                   | ต้องเข้าสู่ระบบ |
 
 > รายการนี้เป็น endpoint หลัก ไม่ใช่รายการ API ทั้งหมด โปรดตรวจสอบไฟล์ใน backend/routes/ ก่อนใช้งาน endpoint เพิ่มเติม
 
@@ -297,7 +309,3 @@ Vite จะแสดง URL สำหรับเปิดเว็บไซต�
 - อัปเดต checkbox ใน Roadmap เมื่อทดสอบฟีเจอร์ครบทั้งส่วนที่เกี่ยวข้อง
 
 ---
-
-## 📄 License
-
-README เดิมระบุ License เป็น MIT โปรดตรวจสอบว่ามีไฟล์ LICENSE ใน repository และเนื้อหาตรงกันก่อนเผยแพร่ต่อ
