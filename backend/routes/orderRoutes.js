@@ -179,39 +179,55 @@ router.patch("/:id/status", protect, async (req, res, next) => {
       });
     }
 
-    if (status === "shipped") {
-      const cleanCarrier = typeof carrier === "string" ? carrier.trim() : "";
-      const cleanTrackingNumber =
-        typeof trackingNumber === "string" ? trackingNumber.trim() : "";
-      const cleanTrackingUrl =
-        typeof trackingUrl === "string" ? trackingUrl.trim() : "";
+    const nextCarrier =
+      typeof carrier === "string"
+        ? carrier.trim()
+        : order.tracking?.carrier || "";
 
-      if (!cleanCarrier || !cleanTrackingNumber || !cleanTrackingUrl) {
-        return res.status(400).json({
-          message: "กรุณากรอกบริษัทขนส่ง เลขพัสดุ และลิงก์ติดตาม",
-        });
-      }
+    const nextTrackingNumber =
+      typeof trackingNumber === "string"
+        ? trackingNumber.trim()
+        : order.tracking?.trackingNumber || "";
 
+    const nextTrackingUrl =
+      typeof trackingUrl === "string"
+        ? trackingUrl.trim()
+        : order.tracking?.trackingUrl || "";
+
+    // ตรวจสอบลิงก์เมื่อมีการระบุ
+    if (nextTrackingUrl) {
       try {
-        const parsedUrl = new URL(cleanTrackingUrl);
+        const parsedUrl = new URL(nextTrackingUrl);
 
         if (!["http:", "https:"].includes(parsedUrl.protocol)) {
-          throw new Error("Invalid protocol");
+          throw new Error("Invalid URL protocol");
         }
       } catch {
         return res.status(400).json({
-          message:
-            "ลิงก์ติดตามต้องเป็น URL ที่ขึ้นต้นด้วย http:// หรือ https://",
+          message: "ลิงก์ติดตามต้องเป็น URL ที่ถูกต้อง",
         });
       }
-
-      order.tracking = {
-        carrier: cleanCarrier,
-        trackingNumber: cleanTrackingNumber,
-        trackingUrl: cleanTrackingUrl,
-        shippedAt: order.tracking?.shippedAt || new Date(),
-      };
     }
+
+    // ก่อนเปลี่ยนเป็นจัดส่งแล้ว ต้องมีข้อมูลติดตามครบ
+    if (
+      status === "shipped" &&
+      (!nextCarrier || !nextTrackingNumber || !nextTrackingUrl)
+    ) {
+      return res.status(400).json({
+        message: "กรุณาระบุบริษัทขนส่ง เลขพัสดุ และลิงก์ติดตามให้ครบ",
+      });
+    }
+
+    order.tracking = {
+      carrier: nextCarrier,
+      trackingNumber: nextTrackingNumber,
+      trackingUrl: nextTrackingUrl,
+      shippedAt:
+        status === "shipped"
+          ? order.tracking?.shippedAt || new Date()
+          : order.tracking?.shippedAt || null,
+    };
 
     order.status = status;
     order.updatedAt = new Date();

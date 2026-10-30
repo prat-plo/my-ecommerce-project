@@ -148,26 +148,39 @@ function OrderHistory() {
                 </div>
               </div>
 
-              {order.tracking?.trackingNumber && (
-                <div className="mt-2 rounded-lg border border-slate-700 bg-slate-900/60 p-3">
-                  <p className="text-sm text-slate-400">ข้อมูลจัดส่ง</p>
-                  <p className="text-white">
-                    {order.tracking.carrier} · {order.tracking.trackingNumber}
+              {(order.tracking?.carrier ||
+                order.tracking?.trackingNumber ||
+                order.tracking?.trackingUrl) && (
+                <div className="mt-3 rounded-lg border border-slate-700 bg-slate-900/60 p-4">
+                  <p className="mb-2 font-bold text-white">
+                    🚚 ข้อมูลการจัดส่ง
                   </p>
-                  {order.tracking.shippedAt && (
-                    <p className="text-xs text-slate-400">
-                      จัดส่งเมื่อ{" "}
-                      {new Date(order.tracking.shippedAt).toLocaleString(
-                        "th-TH",
-                      )}
+
+                  <div className="space-y-1 text-sm text-slate-300">
+                    <p>
+                      บริษัทขนส่ง: {order.tracking?.carrier || "ยังไม่ระบุ"}
                     </p>
-                  )}
-                  {order.tracking.trackingUrl && (
+
+                    <p>
+                      เลขพัสดุ: {order.tracking?.trackingNumber || "ยังไม่ระบุ"}
+                    </p>
+
+                    {order.tracking?.shippedAt && (
+                      <p>
+                        วันที่จัดส่ง:{" "}
+                        {new Date(order.tracking.shippedAt).toLocaleString(
+                          "th-TH",
+                        )}
+                      </p>
+                    )}
+                  </div>
+
+                  {order.tracking?.trackingUrl && (
                     <a
                       href={order.tracking.trackingUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-2 inline-block text-emerald-400 hover:text-emerald-300 underline"
+                      className="mt-3 inline-block rounded-lg bg-emerald-500 px-4 py-2 font-semibold text-slate-950 hover:bg-emerald-400"
                     >
                       ติดตามพัสดุ
                     </a>

@@ -2,6 +2,33 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "../config/api";
 
+const CARRIERS = {
+  thailand_post: {
+    label: "ไปรษณีย์ไทย",
+    trackingPage: "https://track.thailandpost.co.th/",
+  },
+  flash: {
+    label: "Flash Express",
+    trackingPage: "https://www.flashexpress.co.th/",
+  },
+  jnt: {
+    label: "J&T Express",
+    trackingPage: "https://www.jtexpress.co.th/",
+  },
+  kex: {
+    label: "KEX Express",
+    trackingPage: "https://th.kex-express.com/",
+  },
+  other: {
+    label: "อื่น ๆ",
+    trackingPage: "",
+  },
+};
+
+function createTrackingUrl(carrier) {
+  return CARRIERS[carrier]?.trackingPage || "";
+}
+
 function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const [drafts, setDrafts] = useState({});
@@ -30,6 +57,7 @@ function AdminOrders() {
             {
               status: order.status,
               carrier: order.tracking?.carrier || "",
+              carrierCode: "",
               trackingNumber: order.tracking?.trackingNumber || "",
               trackingUrl: order.tracking?.trackingUrl || "",
             },
@@ -172,14 +200,31 @@ function AdminOrders() {
 
                   <label className="text-sm text-slate-300">
                     บริษัทขนส่ง
-                    <input
-                      value={draft.carrier || ""}
-                      onChange={(event) =>
-                        updateDraft(order._id, "carrier", event.target.value)
-                      }
-                      placeholder="เช่น ไปรษณีย์ไทย"
+                    <select
+                      value={drafts[order._id]?.carrierCode || ""}
+                      onChange={(event) => {
+                        const carrierCode = event.target.value;
+                        const carrier = CARRIERS[carrierCode];
+
+                        setDrafts((current) => ({
+                          ...current,
+                          [order._id]: {
+                            ...current[order._id],
+                            carrierCode,
+                            carrier: carrier?.label || "",
+                            trackingUrl: createTrackingUrl(carrierCode),
+                          },
+                        }));
+                      }}
                       className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white"
-                    />
+                    >
+                      <option value="">เลือกบริษัทขนส่ง</option>
+                      {Object.entries(CARRIERS).map(([value, item]) => (
+                        <option key={value} value={value}>
+                          {item.label}
+                        </option>
+                      ))}
+                    </select>
                   </label>
 
                   <label className="text-sm text-slate-300">
@@ -209,7 +254,7 @@ function AdminOrders() {
                           event.target.value,
                         )
                       }
-                      placeholder="https://..."
+                      placeholder="ระบบจะเติมลิงก์เมื่อเลือกบริษัทขนส่ง"
                       className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white"
                     />
                   </label>
